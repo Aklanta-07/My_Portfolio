@@ -94,10 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Typewriter Effect
     const typeTextSpan = document.querySelector('.typing-text');
-    const words = ["Backend Developer", "Java Spring Engineer", "Problem Solver"];
-    const typingDelay = 100;
-    const erasingDelay = 60;
-    const newWordDelay = 2000;
+    const words = [
+        "Java 21 & Spring Boot APIs",
+        "Low-Level System Architectures",
+        "Resilient Audit Engines",
+        "AI-Ready Retail Backends"
+    ];
+    const typingDelay = 90;
+    const erasingDelay = 50;
+    const newWordDelay = 2200;
     let wordIndex = 0;
     let charIndex = 0;
 
@@ -119,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             wordIndex++;
             if (wordIndex >= words.length) wordIndex = 0;
-            setTimeout(type, typingDelay + 500);
+            setTimeout(type, typingDelay + 400);
         }
     }
 
@@ -159,15 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealItems = document.querySelectorAll('.reveal-item');
     
     const revealObserverOptions = {
-        threshold: 0.12, // element must be 12% in viewport
-        rootMargin: "0px 0px -40px 0px" // triggers slightly before scrolling fully past
+        threshold: 0.12,
+        rootMargin: "0px 0px -40px 0px"
     };
 
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('revealed');
-                observer.unobserve(entry.target); // Stop observing once revealed
+                observer.unobserve(entry.target);
             }
         });
     }, revealObserverOptions);
@@ -184,13 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Get form values
-            const name = document.getElementById('form-name').value;
-            const email = document.getElementById('form-email').value;
-            const subject = document.getElementById('form-subject').value;
-            const message = document.getElementById('form-message').value;
-            
-            // Update UI to submitting state
             const submitBtn = contactForm.querySelector('.btn-submit');
             const submitBtnText = submitBtn.querySelector('span');
             const submitBtnIcon = submitBtn.querySelector('i');
@@ -202,21 +200,16 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtnIcon.className = 'fa-solid fa-circle-notch fa-spin';
             submitBtn.disabled = true;
             
-            // Simulate form submission (e.g. AJAX post delay)
             setTimeout(() => {
-                // Return button to normal
                 submitBtnText.textContent = originalText;
                 submitBtnIcon.className = originalIconClass;
                 submitBtn.disabled = false;
                 
-                // Show success status
                 formStatus.className = 'form-status-msg success';
                 formStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Thank you! Your message has been sent successfully.';
                 
-                // Reset form fields
                 contactForm.reset();
                 
-                // Clear success message after 5 seconds
                 setTimeout(() => {
                     formStatus.style.opacity = '0';
                     setTimeout(() => {
@@ -226,6 +219,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 5000);
                 
             }, 1800);
+        });
+    }
+
+    // 8. Project Category Filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filterValue = btn.getAttribute('data-filter');
+
+            projectCards.forEach(card => {
+                if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                    card.classList.remove('hide');
+                } else {
+                    card.classList.add('hide');
+                }
+            });
+        });
+    });
+
+    // 9. AI Roadmap Modal Handling
+    const openAiRoadmapBtn = document.getElementById('open-ai-roadmap-btn');
+    const closeAiRoadmapBtn = document.getElementById('close-modal-btn');
+    const aiRoadmapModal = document.getElementById('ai-roadmap-modal');
+
+    if (openAiRoadmapBtn && aiRoadmapModal) {
+        const openModal = () => {
+            aiRoadmapModal.classList.add('active');
+            aiRoadmapModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+            aiRoadmapModal.classList.remove('active');
+            aiRoadmapModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        openAiRoadmapBtn.addEventListener('click', openModal);
+        if (closeAiRoadmapBtn) closeAiRoadmapBtn.addEventListener('click', closeModal);
+
+        aiRoadmapModal.addEventListener('click', (e) => {
+            if (e.target === aiRoadmapModal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && aiRoadmapModal.classList.contains('active')) {
+                closeModal();
+            }
         });
     }
 });
